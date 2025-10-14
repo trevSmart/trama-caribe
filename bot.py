@@ -181,7 +181,8 @@ def create_app():
     # Initialize the Slack app
     app = App(
         token=os.environ.get("SLACK_BOT_TOKEN"),
-        signing_secret=os.environ.get("SLACK_SIGNING_SECRET")
+        signing_secret=os.environ.get("SLACK_SIGNING_SECRET"),
+        token_verification_enabled=False  # Disable token verification for development
     )
 
     # Register event handlers
