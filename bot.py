@@ -205,6 +205,19 @@ def create_app():
     def slack_interactive():
         return handler.handle(request)
 
+    # Temporary endpoint for Slack challenge verification
+    @flask_app.route("/", methods=["POST"])
+    def slack_challenge():
+        """Handle Slack challenge verification at root endpoint"""
+        try:
+            data = request.get_json()
+            if data and "challenge" in data:
+                return data["challenge"]
+            return handler.handle(request)
+        except Exception as e:
+            print(f"Error handling challenge: {e}")
+            return "OK", 200
+
     return flask_app
 
 
