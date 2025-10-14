@@ -182,11 +182,9 @@ def main():
         handle_app_mention(event, say, logger)
 
     # Initialize Flask app
+    global flask_app
     flask_app = Flask(__name__)
     handler = SlackRequestHandler(app)
-
-    # Make flask_app available for gunicorn
-    global flask_app
 
     @flask_app.route("/slack/events", methods=["POST"])
     def slack_events():
