@@ -184,7 +184,7 @@ def main():
     # Initialize Flask app
     flask_app = Flask(__name__)
     handler = SlackRequestHandler(app)
-    
+
     # Make flask_app available for gunicorn
     global flask_app
 
