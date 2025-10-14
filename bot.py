@@ -157,43 +157,43 @@ def create_app():
     from slack_bolt import App
     from slack_bolt.adapter.flask import SlackRequestHandler
     from flask import Flask, request
-    
+
     global app, flask_app
-    
+
     # Check for required environment variables
     if not os.environ.get("SLACK_BOT_TOKEN"):
         raise ValueError("SLACK_BOT_TOKEN environment variable is required")
-    
+
     if not os.environ.get("SLACK_SIGNING_SECRET"):
         raise ValueError("SLACK_SIGNING_SECRET environment variable is required")
-    
+
     # Initialize the Slack app
     app = App(
         token=os.environ.get("SLACK_BOT_TOKEN"),
         signing_secret=os.environ.get("SLACK_SIGNING_SECRET")
     )
-    
+
     # Register event handlers
     @app.event("message")
     def handle_message_wrapper(event, say, logger):
         handle_message(event, say, logger)
-    
+
     @app.event("app_mention")
     def handle_app_mention_wrapper(event, say, logger):
         handle_app_mention(event, say, logger)
-    
+
     # Initialize Flask app
     flask_app = Flask(__name__)
     handler = SlackRequestHandler(app)
-    
+
     @flask_app.route("/slack/events", methods=["POST"])
     def slack_events():
         return handler.handle(request)
-    
+
     @flask_app.route("/slack/interactive", methods=["POST"])
     def slack_interactive():
         return handler.handle(request)
-    
+
     return flask_app
 
 
@@ -202,12 +202,12 @@ def main():
     Main entry point for the bot.
     """
     flask_app = create_app()
-    
+
     print(f"🤖 Trama Caribe bot starting...")
     print(f"⏰ Inactivity threshold: {INACTIVITY_MINUTES} minutes")
     print(f"👋 Monitoring for missing greetings...")
     print(f"🌐 Webhook server ready!")
-    
+
     # Start the Flask server
     port = int(os.environ.get("PORT", 3000))
     flask_app.run(host="0.0.0.0", port=port, debug=False)
