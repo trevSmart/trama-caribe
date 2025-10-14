@@ -124,13 +124,12 @@ def handle_message(event, say, logger):
         key = (user_id, channel_id)
 
         # Check if user has been inactive and didn't greet
-        # For testing: respond to any message without greeting
-        if not has_greeting(text):
+        if not has_greeting(text) and should_respond(user_id, channel_id, current_time):
             # Respond with an elaborate greeting
             import random
             greeting = random.choice(GREETING_RESPONSES)
             say(greeting)
-            logger.info(f"Sent greeting to user {user_id} in channel {channel_id}")
+            logger.info(f"Sent greeting to user {user_id} in channel {channel_id} (inactive for {INACTIVITY_MINUTES} minutes)")
 
         # Update the last message timestamp for this user in this channel
         user_last_message[key] = current_time
