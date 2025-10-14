@@ -213,8 +213,17 @@ def main():
     flask_app.run(host="0.0.0.0", port=port, debug=False)
 
 
-# Create Flask app for gunicorn
-flask_app = create_app()
+# Create Flask app for gunicorn (lazy initialization)
+flask_app = None
+
+def get_app():
+    global flask_app
+    if flask_app is None:
+        flask_app = create_app()
+    return flask_app
+
+# For gunicorn
+flask_app = get_app()
 
 if __name__ == "__main__":
     main()
