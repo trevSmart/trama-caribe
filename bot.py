@@ -15,6 +15,10 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Try to load from Railway environment file if exists
+if os.path.exists('/app/.env'):
+    load_dotenv('/app/.env')
+
 # Slack app will be initialized in main() to avoid import-time issues
 app = None
 flask_app = None
