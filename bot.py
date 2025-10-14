@@ -19,8 +19,8 @@ load_dotenv()
 app = None
 
 # Configuration
-INACTIVITY_HOURS = int(os.environ.get("INACTIVITY_HOURS", 4))
-INACTIVITY_SECONDS = INACTIVITY_HOURS * 3600
+INACTIVITY_MINUTES = int(os.environ.get("INACTIVITY_MINUTES", 1))  # 1 minute
+INACTIVITY_SECONDS = INACTIVITY_MINUTES * 60
 
 # List of acceptable salutations (case-insensitive)
 SALUTATIONS: Set[str] = {
@@ -80,7 +80,7 @@ def should_respond(user_id: str, channel_id: str, current_time: float) -> bool:
         current_time: Current timestamp
 
     Returns:
-        True if user has been inactive for more than INACTIVITY_HOURS, False otherwise
+        True if user has been inactive for more than INACTIVITY_MINUTES, False otherwise
     """
     key = (user_id, channel_id)
 
@@ -119,7 +119,8 @@ def handle_message(event, say, logger):
         key = (user_id, channel_id)
 
         # Check if user has been inactive and didn't greet
-        if should_respond(user_id, channel_id, current_time) and not has_greeting(text):
+        # For testing: respond to any message without greeting
+        if not has_greeting(text):
             # Respond with an elaborate greeting
             import random
             greeting = random.choice(GREETING_RESPONSES)
@@ -193,7 +194,7 @@ def main():
         return handler.handle(request)
 
     print(f"🤖 Trama Caribe bot starting...")
-    print(f"⏰ Inactivity threshold: {INACTIVITY_HOURS} hours")
+    print(f"⏰ Inactivity threshold: {INACTIVITY_MINUTES} minutes")
     print(f"👋 Monitoring for missing greetings...")
     print(f"🌐 Webhook server ready!")
 
