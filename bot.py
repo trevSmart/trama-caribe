@@ -157,14 +157,21 @@ def create_app():
     from slack_bolt import App
     from slack_bolt.adapter.flask import SlackRequestHandler
     from flask import Flask, request
-
+    
     global app, flask_app
-
-    # Check for required environment variables
-    if not os.environ.get("SLACK_BOT_TOKEN"):
+    
+    # Check for required environment variables with debug info
+    bot_token = os.environ.get("SLACK_BOT_TOKEN")
+    signing_secret = os.environ.get("SLACK_SIGNING_SECRET")
+    
+    print(f"Debug - SLACK_BOT_TOKEN present: {bool(bot_token)}")
+    print(f"Debug - SLACK_SIGNING_SECRET present: {bool(signing_secret)}")
+    print(f"Debug - All env vars: {list(os.environ.keys())}")
+    
+    if not bot_token:
         raise ValueError("SLACK_BOT_TOKEN environment variable is required")
-
-    if not os.environ.get("SLACK_SIGNING_SECRET"):
+    
+    if not signing_secret:
         raise ValueError("SLACK_SIGNING_SECRET environment variable is required")
 
     # Initialize the Slack app
