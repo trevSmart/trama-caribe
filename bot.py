@@ -184,6 +184,9 @@ def main():
     # Initialize Flask app
     flask_app = Flask(__name__)
     handler = SlackRequestHandler(app)
+    
+    # Make flask_app available for gunicorn
+    global flask_app
 
     @flask_app.route("/slack/events", methods=["POST"])
     def slack_events():
@@ -199,7 +202,8 @@ def main():
     print(f"🌐 Webhook server ready!")
 
     # Start the Flask server
-    flask_app.run(host="0.0.0.0", port=3000, debug=True)
+    port = int(os.environ.get("PORT", 3000))
+    flask_app.run(host="0.0.0.0", port=port, debug=False)
 
 
 if __name__ == "__main__":
